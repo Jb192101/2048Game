@@ -1,21 +1,23 @@
 package jedi_bachelor.game;
 
-import java.util.Arrays;
+/*
+В данном случае объекты класса ArrayDeque работают как стэк
+ */
+
+import java.util.Deque;
 import java.util.Random;
+import java.util.ArrayDeque;
 import java.util.Scanner;
-import java.util.Stack;
+import java.util.Arrays;
 
 public class Game {
     private int[][] map;
     private int score;
     //private char prevMove;
     private final Random random;
+    private byte countOfNules;
 
     public Game() {
-//        map = new int[][] { {0, 0, 0, 0},
-//                            {0, 0, 0, 0},
-//                            {0, 0, 0, 0},
-//                            {0, 0, 0, 0}};
         map = new int[][] { {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
@@ -23,13 +25,13 @@ public class Game {
         score = 0;
         //prevMove = 'q';
         random = new Random();
+        countOfNules = 16;
     }
 
     public void run() {
         generateRandomTile();
-        generateRandomTile();
         Scanner scan = new Scanner(System.in);
-        while(true) {
+        while(generateRandomTile()) {
             printMap();
             printMenu();
             //char n = prevMove;
@@ -58,8 +60,8 @@ public class Game {
                 default:
                     System.out.println("Incorrect input value!");
             }
-            generateRandomTile();
         }
+        System.out.println("Game over!");
     }
 
     private void printMap() {
@@ -67,6 +69,7 @@ public class Game {
             System.out.println(Arrays.toString(line));
         }
         System.out.println("Score = " + this.score);
+        System.out.println("Nules = " + this.countOfNules);
     }
 
     private void printMenu() {
@@ -80,19 +83,23 @@ public class Game {
 
     // move-ы
     private void moveLeft() {
+        Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
-            Stack<Integer> stack = new Stack<>();
             boolean isChanged = false;
             for(int j = 0; j < map.length; j++) {
                 if(map[i][j] == 0) {
                     continue;
-                } else if(stack.empty()) {
+                } else if(stack.isEmpty()) {
+                    stack.push(map[i][j]);
+                } else if(stack.peek() != map[i][j] && isChanged) {
+                    isChanged = false;
                     stack.push(map[i][j]);
                 } else if(stack.peek() == map[i][j] && !isChanged) {
                     stack.pop();
                     stack.push(2*map[i][j]);
                     isChanged = true;
                     score += 2*map[i][j];
+                    this.countOfNules++;
                 } else {
                     stack.push(map[i][j]);
                 }
@@ -102,7 +109,7 @@ public class Game {
             // Возвращение элементов
             int size = stack.size();
             int k = 0;
-            while(!stack.empty()) {
+            while(!stack.isEmpty()) {
                 map[i][size - k - 1] = stack.pop();
                 k++;
             }
@@ -111,19 +118,23 @@ public class Game {
     }
 
     private void moveRigth() {
+        Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
-            Stack<Integer> stack = new Stack<>();
             boolean isChanged = false;
             for(int j = map.length - 1; j >= 0; j--) {
                 if(map[i][j] == 0) {
                     continue;
-                } else if(stack.empty()) {
+                } else if(stack.isEmpty()) {
+                    stack.push(map[i][j]);
+                } else if(stack.peek() != map[i][j] && isChanged) {
+                    isChanged = false;
                     stack.push(map[i][j]);
                 } else if(stack.peek() == map[i][j] && !isChanged) {
                     stack.pop();
                     stack.push(2*map[i][j]);
                     isChanged = true;
                     score += 2*map[i][j];
+                    countOfNules++;
                 } else {
                     stack.push(map[i][j]);
                 }
@@ -132,7 +143,7 @@ public class Game {
 
             // Возвращение элементов
             int k = map.length - stack.size();
-            while(!stack.empty()) {
+            while(!stack.isEmpty()) {
                 map[i][k] = stack.pop();
                 k++;
             }
@@ -140,19 +151,23 @@ public class Game {
     }
 
     private void moveDown() {
+        Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
-            Stack<Integer> stack = new Stack<>();
             boolean isChanged = false;
             for(int j = map.length - 1; j >= 0; j--) {
                 if(map[j][i] == 0) {
                     continue;
-                } else if(stack.empty()) {
+                } else if(stack.isEmpty()) {
+                    stack.push(map[j][i]);
+                } else if(stack.peek() != map[j][i] && isChanged) {
+                    isChanged = false;
                     stack.push(map[j][i]);
                 } else if(stack.peek() == map[j][i] && !isChanged) {
                     stack.pop();
                     stack.push(2*map[j][i]);
                     isChanged = true;
                     score += 2*map[j][i];
+                    this.countOfNules++;
                 } else {
                     stack.push(map[j][i]);
                 }
@@ -161,7 +176,7 @@ public class Game {
 
             // Возвращение элементов
             int k = map.length - stack.size();
-            while(!stack.empty()) {
+            while(!stack.isEmpty()) {
                 map[k][i] = stack.pop();
                 k++;
             }
@@ -169,19 +184,23 @@ public class Game {
     }
 
     private void moveUp() {
+        Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
-            Stack<Integer> stack = new Stack<>();
             boolean isChanged = false;
             for(int j = map.length - 1; j >= 0; j--) {
                 if(map[j][i] == 0) {
                     continue;
-                } else if(stack.empty()) {
+                } else if(stack.isEmpty()) {
+                    stack.push(map[j][i]);
+                } else if(stack.peek() != map[j][i] && isChanged) {
+                    isChanged = false;
                     stack.push(map[j][i]);
                 } else if(stack.peek() == map[j][i] && !isChanged) {
                     stack.pop();
                     stack.push(2*map[j][i]);
                     isChanged = true;
                     score += 2*map[j][i];
+                    this.countOfNules++;
                 } else {
                     stack.push(map[j][i]);
                 }
@@ -190,25 +209,31 @@ public class Game {
 
             // Возвращение элементов
             int size = stack.size();
-            int k = 0;
-            while(!stack.empty()) {
+            int k = size - 1;
+            while(!stack.isEmpty()) {
                 map[size - k - 1][i] = stack.pop();
-                k++;
+                k--;
             }
         }
     }
 
-    private void generateRandomTile() {
-        int row = -1;
-        int col = -1;
-        do {
-            row = random.nextInt(4);
-            col = random.nextInt(4);
-        } while(map[row][col] != 0);
+    private boolean generateRandomTile() {
+        if(this.countOfNules != 0) {
+            int row = -1;
+            int col = -1;
+            do {
+                row = random.nextInt(map.length);
+                col = random.nextInt(map.length);
+            } while (map[row][col] != 0);
 
-        int value = (random.nextDouble() < 0.9) ? 2 : 4;
+            int value = (random.nextDouble() < 0.9) ? 2 : 4;
 
-        map[row][col] = value;
+            map[row][col] = value;
+            countOfNules--;
+            return true; // Если есть нули
+        } else {
+            return false; // Если нет нулей
+        }
     }
 
 }
