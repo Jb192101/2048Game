@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class MainView extends GridPane {
-    private static final int SIZE = 4; // 4x4 grid
+    private static final int SIZE = 4;
     private static final int TILE_SIZE = 100;
     private static final int GAP = 10;
     private static final Color EMPTY_COLOR = Color.rgb(205, 193, 180);

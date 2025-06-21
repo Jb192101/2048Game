@@ -1,9 +1,7 @@
 package org.jedi_bachelor;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.jedi_bachelor.view.MainView;
 import org.jedi_bachelor.viewmodel.MainViewModel;
 
 public class Main extends Application {

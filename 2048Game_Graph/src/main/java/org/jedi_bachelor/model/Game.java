@@ -1,5 +1,6 @@
 package org.jedi_bachelor.model;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Deque;
@@ -8,54 +9,29 @@ import java.util.ArrayDeque;
 import java.util.Scanner;
 
 public class Game {
+    @Getter
     private int[][] map;
     @Setter
+    @Getter
     private int score;
     private final Random random;
     private byte countOfNules;
-    @Setter
-    private GameUpdateCallback callback;
 
     public Game() {
-        map = new int[][] { {0, 0, 0, 0},
+        map = new int[][] { {2, 0, 0, 0},
                 {0, 0, 0, 0},
-                {0, 0, 0, 0},
+                {2, 0, 0, 2},
                 {0, 0, 0, 0}};
         score = 0;
-        //prevMove = 'q';
         random = new Random();
         countOfNules = 16;
     }
 
-    public void run() {
-        generateRandomTile();
-        Scanner scan = new Scanner(System.in);
-        while(generateRandomTile()) {
-            System.out.print("Куда идти: ");
-            char n = scan.next().charAt(0);
-
-            switch (n) {
-                case 'w':
-                    moveUp();
-                    break;
-                case 'd':
-                    moveRight();
-                    break;
-                case 's':
-                    moveDown();
-                    break;
-                case 'a':
-                    moveLeft();
-                    break;
-                default:
-                    System.out.println("Incorrect input value!");
-            }
-        }
-        System.out.println("Game over!");
+    public boolean isGameOver() {
+        return countOfNules == 0;
     }
 
-    // move-ы
-    private void moveLeft() {
+    public void moveLeft() {
         Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
             boolean isChanged = false;
@@ -87,9 +63,10 @@ public class Game {
             }
         }
 
+        generateRandomTile();
     }
 
-    private void moveRight() {
+    public void moveRight() {
         Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
             boolean isChanged = false;
@@ -119,9 +96,11 @@ public class Game {
                 k++;
             }
         }
+
+        generateRandomTile();
     }
 
-    private void moveDown() {
+    public void moveDown() {
         Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
             boolean isChanged = false;
@@ -151,9 +130,11 @@ public class Game {
                 k++;
             }
         }
+
+        generateRandomTile();
     }
 
-    private void moveUp() {
+    public void moveUp() {
         Deque<Integer> stack = new ArrayDeque<>();
         for(int i = 0; i < map.length; i++) {
             boolean isChanged = false;
@@ -184,6 +165,8 @@ public class Game {
                 k--;
             }
         }
+
+        generateRandomTile();
     }
 
     private boolean generateRandomTile() {
@@ -203,18 +186,5 @@ public class Game {
         } else {
             return false; // Если нет нулей
         }
-    }
-
-    private void notifyMapUpdated() {
-        if (callback != null) {
-            callback.onMapUpdated(this.map);
-        }
-    }
-
-    // Интерфейс для callback-ов
-    public interface GameUpdateCallback {
-        void onMapUpdated(int[][] newMap);
-        void onScoreUpdated(int newScore);
-        void onGameOver();
     }
 }
