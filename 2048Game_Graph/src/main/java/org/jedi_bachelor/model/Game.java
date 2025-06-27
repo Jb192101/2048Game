@@ -6,7 +6,6 @@ import lombok.Setter;
 import java.util.Deque;
 import java.util.Random;
 import java.util.ArrayDeque;
-import java.util.Scanner;
 
 public class Game {
     @Getter
@@ -18,17 +17,43 @@ public class Game {
     private byte countOfNules;
 
     public Game() {
-        map = new int[][] { {2, 0, 0, 0},
+        map = new int[][] { {0, 0, 0, 0},
                 {0, 0, 0, 0},
-                {2, 0, 0, 2},
+                {0, 0, 0, 0},
                 {0, 0, 0, 0}};
         score = 0;
         random = new Random();
-        countOfNules = 16;
+        countOfNules = 14;
+
+        int i1 = random.nextInt(0, map.length);
+        int j1 = random.nextInt(0, map.length);
+
+        map[i1][j1] = 2;
+
+        int i2;
+        int j2;
+        do {
+            i2 = random.nextInt(0, map.length);
+            j2 = random.nextInt(0, map.length);
+        } while (i2 == i1 && j2 == j1);
+
+        map[i2][j2] = 2;
     }
 
     public boolean isGameOver() {
-        return countOfNules == 0;
+        if (countOfNules > 0) return false;
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (j < map[i].length - 1 && map[i][j] == map[i][j + 1]) {
+                    return false;
+                }
+                if (i < map.length - 1 && map[i][j] == map[i + 1][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void moveLeft() {
@@ -182,9 +207,9 @@ public class Game {
 
             map[row][col] = value;
             countOfNules--;
-            return true; // Если есть нули
+            return true;
         } else {
-            return false; // Если нет нулей
+            return false;
         }
     }
 }

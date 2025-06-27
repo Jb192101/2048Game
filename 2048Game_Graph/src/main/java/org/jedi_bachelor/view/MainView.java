@@ -1,11 +1,17 @@
 package org.jedi_bachelor.view;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.Optional;
 
 public class MainView extends GridPane {
     private static final int SIZE = 4;
@@ -56,8 +62,8 @@ public class MainView extends GridPane {
         this.add(tile, col, row);
     }
 
-    private Color getTileColor(int value) {
-        return switch (value) {
+    private Color getTileColor(int _value) {
+        return switch (_value) {
             case 2 -> Color.rgb(238, 228, 218);
             case 4 -> Color.rgb(237, 224, 200);
             case 8 -> Color.rgb(242, 177, 121);
@@ -71,5 +77,33 @@ public class MainView extends GridPane {
             case 2048 -> Color.rgb(237, 194, 46);
             default -> Color.rgb(60, 58, 50);
         };
+    }
+
+    public void showGameOverDialog(int _score, Runnable _restartAction) {
+        Platform.runLater(() -> {
+            try {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                //alert.initOwner(this.getScene().getWindow());
+                alert.setTitle("Игра окончена");
+                alert.setHeaderText("Game Over!");
+                alert.setContentText("Ваш счет: " + _score);
+
+                ButtonType restartButton = new ButtonType("Новая игра", ButtonBar.ButtonData.YES);
+                ButtonType exitButton = new ButtonType("Выход", ButtonBar.ButtonData.NO);
+                alert.getButtonTypes().setAll(restartButton, exitButton);
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                result.ifPresent(buttonType -> {
+                    if (buttonType == restartButton) {
+                        _restartAction.run();
+                    } else {
+                        Platform.exit();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

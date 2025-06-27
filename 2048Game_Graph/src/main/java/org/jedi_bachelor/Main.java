@@ -14,4 +14,9 @@ public class Main extends Application {
         MainViewModel mvm = new MainViewModel();
         mvm.startApp(stage);
     }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
 }
